@@ -1,35 +1,49 @@
-# PROJECT TITLE
-Solidity-Error-Handling
+# FuncErrors Smart Contract
 
-# Description
-A simple smart contract that implements one each of revert(), assert(), and require() statements.
+## Overview
 
-# Getting Started
+FuncErrors is a Solidity smart contract that extends the ERC20 and Ownable contracts from the OpenZeppelin library. It introduces custom functions for minting, burning, and transferring tokens with additional checks and error handling mechanisms.
 
-# Installing
-- All necessary installations are pre-installed on Remix online IDE
-- Copy the raw file "ErrorHandling.sol" of this repository
-- Launch the Remix online IDE with the url https://remix.ethereum.org
+## License
 
-# Executing Program
+This contract is released under the MIT License.
 
-- In Remix, create a new file inside the "contracts" folder on the File explorer displayed on the left
-- Paste the raw copy from ErrorHandling.sol (as below) in the new file you created.
-- Compile the contract by clicking on the "Solidity Compiler" button on the outermost left menu bar (or use the shortcut "Ctrl + S")
-- Just below the "Solidity Compiler" button, find and use the "Deploy and Run transactions" button to deploy the smart contract
-- On successful deployment, find and click on the "Deployed Contracts" heading to see a drop down of an interface through which the contract can be interacted with
-- Find the provided test accounts under the "ACCOUNTS" field of the interface on the left
-- Copy any of the addresses listed in the format 0x5B3...eddC4 (100 ether) for use as input to the interfaces that require an address when interacting with the contract
-- Test interact with the various functions of the smart contract to see the error handling implementations in action.
+## Contract Functions
 
-# Help 
-Ensure that the smart contract file is named a ".sol" file extension
+### mint(address account, uint256 amount)
 
-# Authors(s)
-Contributor's name and contact info
+- Allows the owner to mint new tokens and assign them to a specific account.
+- Parameters:
+  - account (address): The account to which the minted tokens will be assigned.
+  - amount (uint256): The amount of tokens to mint.
+- Conditions:
+  - Requires the minting amount to be greater than zero.
+- Emits:
+  - Internal Transfer event.
 
-Name: Dioshua Sapnu
+### burn(uint256 amount)
 
-Email: dioshuadalugdugan@gmail.com
+- Allows any address to burn a specified amount of their own tokens.
+- Parameters:
+  - amount (uint256): The amount of tokens to burn.
+- Conditions:
+  - Requires the burning amount to be greater than zero.
+  - Requires the burner to have sufficient balance.
+  - Uses assert to check if the total supply is reduced by the burned amount.
+- Emits:
+  - Internal Transfer event.
+
+### transfer(address to, uint256 amount)
+
+- Allows token holders to transfer tokens to another address.
+- Parameters:
+  - to (address): The recipient's address.
+  - amount (uint256): The amount of tokens to transfer.
+- Conditions:
+  - Requires the transfer amount to be greater than zero.
+  - Requires the transfer amount to be at least 20.
+  - Requires the sender to have sufficient balance.
+- Emits:
+  - Internal Transfer event.
 
 
