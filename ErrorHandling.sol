@@ -1,38 +1,32 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.0;
 
-contract HandleErrors {
+import "@openzeppelin/contracts@4.9.0/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts@4.9.0/access/Ownable.sol";
 
-    // public variables here
-    string public tokenName = "DioshuaToken";
-    string public tokenAbbreviation = "DT";
-    uint public totalSupply = 0;
-    uint public minimumMintable = 100;
+contract FuncErrors is ERC20, Ownable {
+    constructor() ERC20("FuncErrors", "FE") {}
 
-    // mapping variable here
-    mapping(address => uint) public balances;
-
-    // mint function
-    function mint(address _address, uint _value) public {
-        
-        // implementing a require() statement
-        require(_address == msg.sender, "Only the token owner can mint tokens");
-
-        // implementing a revert statement
-        if (_value < minimumMintable) {
-            revert("Minimum amount of token mintable must be matched or exceeded");
-        } else {
-            totalSupply += _value;
-            balances[_address] += _value;
-        }         
+    function mint(address account, uint256 amount) external onlyOwner {
+        require(amount > 0, "Amount must be greater than 0");
+        _mint(account, amount);
     }
 
-    // burn function
-    function burn(address _address, uint _value) public {
+    function burn(uint256 amount) external {
+        require(amount > 0, "Amount must be greater than 0");
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+        assert(totalSupply() == totalSupply() - amount);
+        _burn(msg.sender, amount);
 
-        // implementing an assert() statement
-        assert(balances[_address] >= _value);
-        totalSupply -= _value;
-        balances[_address] -= _value;
-    }    
+    }
+
+    function transfer(address to, uint256 amount) public virtual override returns (bool) {
+    require(amount > 0, "Amount must be greater than 0");
+    if (amount < 20) {
+        revert("Transfer failed: Amount must be at least 20");
+    }
+    require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+    _transfer(msg.sender, to, amount);
+    return true;
 }
+}
+
